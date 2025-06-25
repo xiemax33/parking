@@ -1,0 +1,93 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Selamat Datang, {{ user }}</h4>
+    <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+  </div>
+
+  <!-- Form Check-in -->
+  <div *ngIf="checkinButton" class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form [formGroup]="parkingForm" (ngSubmit)="checkInPark()">
+        <div class="mb-3">
+          <label for="vehicleType" class="form-label">Jenis Kendaraan</label>
+          <select id="vehicleType" class="form-select" formControlName="type" required>
+            <option value="" disabled selected>Pilih Kendaraan</option>
+            <option value="motor">Motor</option>
+            <option value="mobil">Mobil</option>
+            <option value="bus">Bus</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!parkingForm.valid">
+          Masuk Parkir
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Parkir Aktif -->
+  <div *ngIf="!checkinButton" class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Informasi Parkir</h5>
+    </div>
+    <div class="card-body">
+      <div class="row mb-2">
+        <div class="col-sm-4 fw-semibold">Jenis Kendaraan:</div>
+        <div class="col-sm-8 text-capitalize">{{ statusParkir?.type }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-sm-4 fw-semibold">Area Parkir:</div>
+        <div class="col-sm-8">{{ parkingArea }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-sm-4 fw-semibold">Check-in:</div>
+        <div class="col-sm-8">{{ statusParkir?.checkIn | date: 'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-sm-4 fw-semibold">Durasi Parkir:</div>
+        <div class="col-sm-8">{{ elapsedTime }}</div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-4 fw-semibold">Estimasi Biaya:</div>
+        <div class="col-sm-8">
+          <span class="fs-5 fw-bold text-success">Rp {{ estimatedCost | number: '1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Checkout -->
+  <div *ngIf="!checkinButton" class="mt-4 text-end">
+    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+      Keluar Parkir
+    </button>
+  </div>
+
+  <!-- Modal Checkout -->
+  <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title" id="checkoutModalLabel">Checkout Parkir</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Durasi Parkir:</strong> {{ elapsedTime }}</p>
+          <p><strong>Biaya Parkir:</strong> Rp {{ estimatedCost | number:'1.0-0' }}</p>
+          
+          <div class="mb-3">
+            <label class="form-label">Pilih Pintu Keluar:</label>
+            <select [(ngModel)]="exitGate" class="form-select">
+              <option value="" disabled selected>Pilih pintu</option>
+              <option value="Pintu 1">Pintu 1</option>
+              <option value="Pintu 2">Pintu 2</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button class="btn btn-success" [disabled]="!exitGate" (click)="checkout()">Konfirmasi Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

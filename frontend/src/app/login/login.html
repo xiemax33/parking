@@ -1,0 +1,58 @@
+<div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold">Login</h3>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors">
+          <div *ngIf="loginForm.controls['email'].errors?.['required']">Email is required.</div>
+          <div *ngIf="loginForm.controls['email'].errors?.['email']">Invalid email format.</div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            id="password"
+            formControlName="password"
+            placeholder="Enter password"
+            [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+          />
+          <span class="input-group-text" (click)="showPassword = !showPassword" style="cursor: pointer">
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </span>
+        </div>
+        <div class="invalid-feedback" *ngIf="loginForm.get('password')?.errors">
+          <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+          <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger py-2">{{ errorMessage }}</div>
+
+      <!-- Submit -->
+      <div class="d-grid">
+        <button class="btn btn-primary" type="submit" [disabled]="loginForm.invalid">
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
